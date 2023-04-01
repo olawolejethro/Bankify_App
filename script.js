@@ -67,14 +67,6 @@ const inputClosePin = document.querySelector(".form__input--pin");
 
 let currentUser;
 
-const updateUI = function (acc) {
-  displayMovement(acc.movements);
-  //displayBalance
-  calDisplayBalance(acc);
-  //displaySummary
-
-  displaySummary(acc);
-};
 btnLogin.addEventListener("click", (e) => {
   e.preventDefault();
 
@@ -92,7 +84,6 @@ btnLogin.addEventListener("click", (e) => {
     //upadteUI
     updateUI(currentUser);
   }
-  console.log(currentUser, "LOGIN");
 });
 
 btnTransfer.addEventListener("click", function (e) {
@@ -112,11 +103,46 @@ btnTransfer.addEventListener("click", function (e) {
     currentUser.movements.push(-amount);
     recieverAcc.movements.push(amount);
     //UPDATE UI
-    updateUI(currentUser, "hello");
+    updateUI(currentUser);
   }
-  console.log("LONG", recieverAcc, amount);
 });
 
+btnClose.addEventListener("click", (e) => {
+  e.preventDefault();
+  const userPIn = Number(inputClosePin.value);
+  const comfirmUsername = inputCloseUsername.value;
+  const currentUserIndex = accounts.findIndex(
+    (acc) => acc.username === currentUser.username
+  );
+  if (userPIn === currentUser.pin && comfirmUsername === currentUser.username) {
+    // delete account
+    accounts.splice(currentUserIndex, 1);
+
+    // Hide UI
+    containerApp.style.opacity = 0;
+    inputClosePin.value = inputLoginPin.value = "";
+  }
+});
+
+btnLoan.addEventListener("click", (e) => {
+  e.preventDefault();
+  const amount = inputLoanAmount.value;
+  if (amount > 0 && currentUser.movements.some((mov) => mov >= amount * 0.1)) {
+    //Add movement
+    currentUser.movements.push(amount);
+    //update UI
+    updateUI(currentUser);
+  }
+  console.log("LOAN", amount);
+});
+
+const updateUI = function (acc) {
+  displayMovement(acc.movements);
+  //displayBalance
+  calDisplayBalance(acc);
+  //displaySummary
+  displaySummary(acc);
+};
 const displayMovement = function (movements) {
   containerMovements.innerHTML = "";
   movements.forEach(function (mov, i) {
@@ -153,9 +179,9 @@ const displaySummary = function (acc) {
   labelSumInterest.textContent = `${Math.abs(intrest)}$`;
 };
 // displaySummary(currentUser);
-const calDisplayBalance = function (acc) {
-  const balance = acc.reduce((prev, curr, i, arr) => prev + curr, 0);
-  labelBalance.textContent = `${balance}$`;
+const calDisplayBalance = function (accs) {
+  accs.balance = accs.movements.reduce((prev, curr, i, arr) => prev + curr, 0);
+  labelBalance.textContent = `${accs.balance}$`;
 };
 // calDisplayBalance(user2.movements);
 const createUsername = function (Accs) {
