@@ -126,14 +126,21 @@ btnClose.addEventListener("click", (e) => {
 
 btnLoan.addEventListener("click", (e) => {
   e.preventDefault();
-  const amount = inputLoanAmount.value;
+  const amount = Number(inputLoanAmount.value);
   if (amount > 0 && currentUser.movements.some((mov) => mov >= amount * 0.1)) {
     //Add movement
     currentUser.movements.push(amount);
     //update UI
     updateUI(currentUser);
   }
-  console.log("LOAN", amount);
+
+  inputLoanAmount.value = "";
+});
+let sorted = false;
+btnSort.addEventListener("click", function (e) {
+  e.preventDefault();
+  displayMovement(currentUser.movements, !sorted);
+  sorted = !sorted;
 });
 
 const updateUI = function (acc) {
@@ -143,9 +150,11 @@ const updateUI = function (acc) {
   //displaySummary
   displaySummary(acc);
 };
-const displayMovement = function (movements) {
+const displayMovement = function (movements, sort = false) {
   containerMovements.innerHTML = "";
-  movements.forEach(function (mov, i) {
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  console.log(movs);
+  movs.forEach(function (mov, i) {
     const type = mov > 0 ? "deposit" : "withdrwal";
 
     const formatedHtml = `    <div class="movements__row">
@@ -183,6 +192,7 @@ const calDisplayBalance = function (accs) {
   accs.balance = accs.movements.reduce((prev, curr, i, arr) => prev + curr, 0);
   labelBalance.textContent = `${accs.balance}$`;
 };
+
 // calDisplayBalance(user2.movements);
 const createUsername = function (Accs) {
   Accs.forEach(function (acc) {
