@@ -153,7 +153,7 @@ const updateUI = function (acc) {
 const displayMovement = function (movements, sort = false) {
   containerMovements.innerHTML = "";
   const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
-  console.log(movs);
+  // console.log(movs);
   movs.forEach(function (mov, i) {
     const type = mov > 0 ? "deposit" : "withdrwal";
 
@@ -205,3 +205,13 @@ const createUsername = function (Accs) {
 };
 
 createUsername(accounts);
+
+labelBalance.addEventListener("click", function (e) {
+  e.preventDefault();
+  const movementUI = Array.from(
+    document.querySelectorAll(".movement__value"),
+    (el) => Number(el.textContent.replace("$", ""))
+  );
+
+  console.log(movementUI);
+});
