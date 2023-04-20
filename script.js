@@ -160,7 +160,7 @@ const displayMovement = function (movements, sort = false) {
     const formatedHtml = `    <div class="movements__row">
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
     <div class="movements__date">3 days ago</div>
-    <div class="movements__value">${mov}$</div>
+    <div class="movements__value">${mov.toFixed(2)}$</div>
   </div>`;
     containerMovements.insertAdjacentHTML("afterbegin", `${formatedHtml}`);
   });
@@ -183,14 +183,14 @@ const displaySummary = function (acc) {
     .filter((int, i, arr) => int >= 1)
     .reduce((prev, curr) => prev + curr, 0);
 
-  labelSumIn.textContent = `${Math.abs(input)}$`;
-  labelSumOut.textContent = `${Math.abs(outPut)}$`;
-  labelSumInterest.textContent = `${Math.abs(intrest)}$`;
+  labelSumIn.textContent = `${input.toFixed(2)}$`;
+  labelSumOut.textContent = `${outPut.toFixed(2)}$`;
+  labelSumInterest.textContent = `${intrest.toFixed(2)}$`;
 };
 // displaySummary(currentUser);
 const calDisplayBalance = function (accs) {
   accs.balance = accs.movements.reduce((prev, curr, i, arr) => prev + curr, 0);
-  labelBalance.textContent = `${accs.balance}$`;
+  labelBalance.textContent = `${accs.balance.toFixed(2)}$`;
 };
 
 // calDisplayBalance(user2.movements);
